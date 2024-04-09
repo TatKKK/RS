@@ -18,10 +18,9 @@ namespace RS.Controllers
         public UsersController(IPKG_USER package, IJwtManager jwtManager)
         {
             this.package = package;
-            this.jwtManager = jwtManager;
-          
-
+            this.jwtManager = jwtManager;        
         }
+
         [HttpPost("Authenticate")]
         public IActionResult Authenticate(Login loginData)
         {
@@ -47,7 +46,8 @@ namespace RS.Controllers
         public async Task<IActionResult> AddUser([FromForm] UserDto userDto, [FromForm] IFormFile image)
         {
           
-            if (string.IsNullOrEmpty(userDto.Fname) || string.IsNullOrEmpty(userDto.Lname) || string.IsNullOrEmpty(userDto.Email))
+            if (string.IsNullOrEmpty(userDto.Fname) || string.IsNullOrEmpty(userDto.Lname) || string.IsNullOrEmpty(userDto.Email)
+               || string.IsNullOrEmpty(userDto.Password) || string.IsNullOrEmpty(userDto.IdNumber))
             {
                 return BadRequest("Invalid input");
             }
@@ -101,6 +101,26 @@ namespace RS.Controllers
                 await image.CopyToAsync(fileStream);
             }
             return $"/images/{fileName}";
+        }
+
+        public class UpdatePasswordModel
+        {
+            public string Password { get; set; }
+        }
+
+        [HttpPut("updatePassword/{email}")]
+        public IActionResult UpdatePassword(string email, [FromBody] UpdatePasswordModel model)
+        {
+            try
+            {
+                package.Update_password(email, model.Password);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error Uploading data");
+            }
         }
 
 
@@ -166,5 +186,19 @@ namespace RS.Controllers
             }
         }
 
+        [HttpGet("userby/{email}")]
+        public IActionResult GetUserByEmail(string email)
+        {
+            try
+            {
+                User user = package.Get_user_byEmail(email);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, "System error, try again");
+            }
+        }
     } 
 }

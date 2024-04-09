@@ -50,6 +50,24 @@ namespace RS.Controllers
                 }
             }
         }
+
+        [HttpGet("users/{userId}")]
+
+        public IActionResult GetAppointmentsByUser(int userId)
+        {
+            List<Appointment> appointments;
+            try
+            {
+                appointments = package.Get_Appointments_By_User(userId);
+                return Ok(appointments);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, "System error, try again");
+            }
+        }
         [HttpGet("doctor/{doctorId}")]
 
         public IActionResult GetAppointmentsByDoctors(int doctorId)
@@ -105,7 +123,7 @@ namespace RS.Controllers
         }
 
         [HttpDelete("delete/{id}")]
-        [Authorize]
+        [Authorize(Roles = "patient, doctor, admin")]
 
         public IActionResult DeleteAppointment(int id)
         {
