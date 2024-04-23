@@ -7,9 +7,9 @@
         public string Lname { get; set; }
         public string IdNumber { get; set; }
         public string Email { get; set; }
-        public string Password { get; set; }
-        public string Discriminator {  get; set; }
-       public string ImageUrl {  get; set; }    
+        public string? Password { get; set; }
+        public string? Discriminator {  get; set; }
+       public string? ImageUrl {  get; set; }    
     }
 
     public class Login
@@ -26,10 +26,10 @@
         public string Lname { get; set; }
         public string IdNumber { get; set; }
         public string Email { get; set; }
-        public string Password { get; set; }
-        public string Discriminator { get; set; }
+        public string? Password { get; set; }
+        public string? Discriminator { get; set; }
       
-        public IFormFile Image {  get; set; }
+        public IFormFile? Image {  get; set; }
 
     }
 

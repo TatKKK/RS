@@ -2,6 +2,7 @@
 using Oracle.ManagedDataAccess.Client;
 using RS.Models;
 using System.Data;
+using System.Drawing;
 using System.Numerics;
 using System.Xml.Linq;
 
@@ -10,7 +11,7 @@ namespace RS.Packages
     public interface IPKG_DOCTOR
     {
         public List<Doctor> Get_doctors();
-        public Doctor Get_doctor_byEmail(string Email); 
+        public Doctor Get_doctor_byEmail(string Email);
         public Doctor Get_doctor(int id);
         public void Add_doctor(Doctor doctor);
         public void Delete_doctor(int id);
@@ -65,7 +66,7 @@ namespace RS.Packages
                                     Discriminator = reader["discriminator"].ToString(),
                                     ImageUrl = reader["imageurl"].ToString(),
                                     Category = reader["category"].ToString(),
-                                    Score = Decimal.Parse(reader["score"].ToString()),
+                                    Score = reader["score"] != DBNull.Value ? Decimal.Parse(reader["score"].ToString()) : 0,
                                     ViewCount = int.Parse(reader["viewcount"].ToString()),
                                     Experiences = new List<Experience>()
                                 };
@@ -130,7 +131,7 @@ namespace RS.Packages
 
         public Doctor Get_doctor_byEmail(string Email)
         {
-            Doctor doctor = null;    
+            Doctor doctor = null;
             try
             {
                 using (OracleConnection conn = new OracleConnection(ConnStr))
@@ -326,11 +327,9 @@ namespace RS.Packages
                         cmd.Parameters.Add("p_lname", OracleDbType.Varchar2).Value = doctor.Lname ?? currentDoctor.Lname;
                         cmd.Parameters.Add("p_idNumber", OracleDbType.Varchar2).Value = doctor.IdNumber ?? currentDoctor.IdNumber;
                         cmd.Parameters.Add("p_email", OracleDbType.Varchar2).Value = doctor.Email ?? currentDoctor.Email;
-                        cmd.Parameters.Add("p_password", OracleDbType.Varchar2).Value = doctor.Password ?? currentDoctor.Password;
-                        cmd.Parameters.Add("p_category", OracleDbType.Varchar2).Value = doctor.Category ?? currentDoctor.Category;
-                        cmd.Parameters.Add("p_imageurl", OracleDbType.Varchar2).Value = doctor.ImageUrl ?? currentDoctor.ImageUrl;
-                        cmd.Parameters.Add("p_cvurl", OracleDbType.Varchar2).Value = doctor.CvUrl ?? string.Empty;
-
+                        //cmd.Parameters.Add("p_password", OracleDbType.Varchar2).Value = doctor.Password ?? currentDoctor.Password;
+                        //cmd.Parameters.Add("p_category", OracleDbType.Varchar2).Value = doctor.Category ?? currentDoctor.Category;
+                      
                         cmd.ExecuteNonQuery();
                     }
                     conn.Close();

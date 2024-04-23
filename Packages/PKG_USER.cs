@@ -1,6 +1,7 @@
 ﻿using Oracle.ManagedDataAccess.Client;
 using RS.Models;
 using System.Data;
+using System.Numerics;
 using System.Xml.Linq;
 
 namespace RS.Packages
@@ -122,7 +123,6 @@ namespace RS.Packages
             }
             catch (Exception ex)
             {
-                // Log the exception or handle it as needed
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
 
@@ -141,7 +141,7 @@ namespace RS.Packages
                     using (OracleCommand cmd = new OracleCommand("c##tat.PKG_USERS_SPEC.get_user", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.Add("p_userId", OracleDbType.Decimal).Value = id;
+                        cmd.Parameters.Add("p_userId", OracleDbType.Int32).Value = id;
                         cmd.Parameters.Add("p_result", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
 
                         using (OracleDataReader reader = cmd.ExecuteReader())
@@ -156,9 +156,8 @@ namespace RS.Packages
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}, StackTrace: {ex.StackTrace}");
             }
-
             return user;
         }
         private User MapUser(OracleDataReader reader)
@@ -189,7 +188,8 @@ namespace RS.Packages
                     cmd.Parameters.Add("p_idnumber", OracleDbType.Varchar2).Value = user.IdNumber;
                     cmd.Parameters.Add("p_email", OracleDbType.Varchar2).Value = user.Email;
                     cmd.Parameters.Add("p_password", OracleDbType.Varchar2).Value = user.Password;
-                    cmd.Parameters.Add("p_discriminator", OracleDbType.Varchar2).Value = user.Discriminator;
+                    string discriminatorValue = string.IsNullOrEmpty(user.Discriminator) ? "admin" : user.Discriminator;
+                    cmd.Parameters.Add("p_discriminator", OracleDbType.Varchar2).Value = discriminatorValue;
 
                     cmd.Parameters.Add("p_imageurl", OracleDbType.Varchar2).Value = user.ImageUrl ?? string.Empty;
 

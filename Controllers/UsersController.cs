@@ -43,6 +43,7 @@ namespace RS.Controllers
         }
 
         [HttpPost("AddUser")]
+        [Authorize(Roles ="admin")]
         public async Task<IActionResult> AddUser([FromForm] UserDto userDto, [FromForm] IFormFile image)
         {
           
@@ -172,6 +173,7 @@ namespace RS.Controllers
         }
 
         [HttpGet("user/{id}")]
+        [Authorize]
         public IActionResult GetUser(int id)
         {
             try

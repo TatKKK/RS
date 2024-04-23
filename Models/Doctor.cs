@@ -3,7 +3,7 @@
    
     public class Doctor : User
     {
-        public string Category { get; set; }
+        public string? Category { get; set; }
        
         public decimal? Score { get; set; }
         public List<Experience>? Experiences { get; set; }
@@ -14,15 +14,15 @@
         }
 
         public int ViewCount {  get; set; }
-        public string CvUrl {  get; set; }  
+        public string? CvUrl {  get; set; }  
 
 
     }
 
     public class DoctorDto : UserDto
     {
-        public string Category { get; set; }
-        public IFormFile Cv { get; set; }
+        public string? Category { get; set; }
+        public IFormFile? Cv { get; set; }
 
     }
 }

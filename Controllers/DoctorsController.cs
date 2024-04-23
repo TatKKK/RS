@@ -109,9 +109,7 @@ namespace RS.Controllers
                 {
                     return NotFound("No doctors found.");
                 }
-
-                // Create a response object that includes the data and pagination details
-                var response = new
+                        var response = new
                 {
                     TotalCount = totalCount,
                     PageSize = pageSize,
@@ -210,36 +208,21 @@ namespace RS.Controllers
             return Ok();
         }
 
-        [HttpPut]
-        [Authorize]
-        public IActionResult Edit_doctor(Doctor doctor, int id)
+        [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
+        public IActionResult EditDoctor([FromBody] Doctor doctor, int id)
         {
             try
             {
                 package.Edit_doctor(doctor, id);
+                return Ok();
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "System error, try again: " + ex.Message);
             }
-            return Ok();
         }
 
-        //ალბათ არ მჭირდება
-        //[HttpGet("docsby")]
-        //public IActionResult CategoryCount(string category)
-        //{
-        //    int count = 0;
-        //    try
-        //    {
-        //        package.Category_count(category);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(StatusCodes.Status500InternalServerError, "System error, try again: " + ex.Message);
-        //    }
-        //    return Ok(count);
-        //}
 
         [HttpGet("category/{category}")]
         public async Task<ActionResult<IEnumerable<Doctor>>> GetDoctorsByCategory(string category)
