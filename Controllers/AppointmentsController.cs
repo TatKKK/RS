@@ -51,7 +51,7 @@ namespace RS.Controllers
             }
         }
 
-        [HttpGet("users/{userId}")]
+        [HttpGet("getUsers/{userId}")]
 
         public IActionResult GetAppointmentsByUser(int userId)
         {
@@ -68,7 +68,7 @@ namespace RS.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "System error, try again");
             }
         }
-        [HttpGet("doctor/{doctorId}")]
+        [HttpGet("getDoctor/{doctorId}")]
 
         public IActionResult GetAppointmentsByDoctors(int doctorId)
         {
@@ -86,7 +86,7 @@ namespace RS.Controllers
             }
         }
 
-        [HttpGet("patient/{patientId}")]
+        [HttpGet("getPatient/{patientId}")]
         [Authorize]
 
         public IActionResult GetAppointmentsByPatients(int patientId)
